@@ -1,12 +1,11 @@
-# api_id = 27604095
-# api_hash = '0fb35a13c5f5dc31e48637336294026e'
-# phone_number = '+420774895021'  # Replace with your phone number
-
 import asyncio
-from flask import Request, jsonify
-from telethon.sync import TelegramClient
+from flask import Flask, request, jsonify
+from telethon import TelegramClient
 
-def telegram_message_handler(request: Request):
+app = Flask(__name__)
+
+@app.route("/send_message", methods=["POST"])
+def telegram_message_handler():
     """Cloud Function Entry Point to Send Telegram Messages."""
     data = request.get_json(silent=True)
 
@@ -26,7 +25,7 @@ def telegram_message_handler(request: Request):
     if not isinstance(recipients, list):
         return jsonify({"error": "Recipients must be an array"}), 400
 
-    # ✅ Initialize Telegram Client
+    # ✅ Initialize Telegram Client with a temporary session file
     client = TelegramClient("/tmp/user_session", int(api_id), api_hash, device_model="iPhone 13", system_version="iOS 16.0")
 
     async def send():
@@ -40,11 +39,13 @@ def telegram_message_handler(request: Request):
             except Exception as e:
                 results.append({"recipient": recipient, "error": str(e)})
 
+        await client.disconnect()
         return results
 
-    loop = asyncio.new_event_loop()
-    asyncio.set_event_loop(loop)
-    result = loop.run_until_complete(send())
+    # ✅ Fix: Use `asyncio.run()` instead of `run_until_complete()`
+    result = asyncio.run(send())
 
     return jsonify({"results": result})
 
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=8080)
