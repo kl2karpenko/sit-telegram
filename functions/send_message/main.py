@@ -1,7 +1,3 @@
-# api_id = 27604095
-# api_hash = '0fb35a13c5f5dc31e48637336294026e'
-# phone_number = '+420774895021'  # Replace with your phone number
-
 import asyncio
 from flask import Request, jsonify
 from telethon.sync import TelegramClient
