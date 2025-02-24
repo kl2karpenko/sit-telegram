@@ -1,6 +1,6 @@
 import asyncio
 from flask import Request, jsonify
-from telethon.sync import TelegramClient
+from telethon import TelegramClient
 
 def telegram_message_handler(request: Request):
     """Cloud Function Entry Point to Send Telegram Messages."""
@@ -38,9 +38,9 @@ def telegram_message_handler(request: Request):
 
         return results
 
+    # ✅ Explicitly Create and Use a New Async Event Loop
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
     result = loop.run_until_complete(send())
 
     return jsonify({"results": result})
-
