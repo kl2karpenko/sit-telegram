@@ -23,7 +23,7 @@ def telegram_message_handler(request: Request):
         return jsonify({"error": "Recipients must be an array"}), 400
 
     # ✅ Initialize Telegram Client
-    client = TelegramClient("/tmp/user_session", int(api_id), api_hash, device_model="iPhone 13", system_version="iOS 16.0")
+    client = TelegramClient("/workspace/user_session", int(api_id), api_hash, device_model="iPhone 13", system_version="iOS 16.0")
 
     async def send():
         await client.start(phone=phone_number)
