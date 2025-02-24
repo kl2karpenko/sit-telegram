@@ -1,0 +1,14 @@
+steps:
+  - name: 'gcr.io/cloud-builders/gcloud'
+    args:
+      - 'functions'
+      - 'deploy'
+      - 'telegram-message-handler'
+      - '--region=us-central1'
+      - '--source=.'
+      - '--runtime=python311'
+      - '--trigger-http'
+      - '--allow-unauthenticated'
+      - '--entry-point=telegram_message_handler'
+      - '--memory=256MB'
+timeout: 900s
